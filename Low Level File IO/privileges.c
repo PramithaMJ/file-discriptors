@@ -5,27 +5,38 @@
 #include <sys/stat.h>
 #include <stdio.h>
 
-int main(void)
-{
-    int fd1 = open("./doc3.txt", O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IXUSR);
-    if (fd1 == -1)
-    {
+int main(void){
+    // Check if the file exists. If it exists, remove it
+
+    unlink("./doc3.txt");
+
+    int fd1 = open("./doc3.txt", O_RDWR | O_CREAT | O_TRUNC, S_IRWXU | S_IRWXG | S_IRWXO);
+    if (fd1 == -1){
         perror("./doc3.txt");
         printf("Error while opening the file doc3 %d", errno);
         exit(0);
-    }
-    else
-    {
+    } else {
+        printf("File created successfully\n");
         close(fd1);
     }
 
-    chmod("./doc3.txt", O_RDONLY);
+    // Display current permissions
+    system("ls -la ./doc3.txt");
 
-    int fd2 = open("./doc3.txt", O_RDONLY, S_IRUSR);
-    if (fd2 == -1)
+    int chmod_return = chmod("./doc3.txt", S_IRWXU);
+    if (chmod_return == -1)
     {
         perror("./doc3.txt");
-        printf("Error while opening the file doc3 %d", errno);
+        printf("Error while changing the permissions of the file doc3 fd1%d", errno);
+        exit(0);
+    }else{
+        printf("Permissions changed successfully fd1\n");
+    }
+
+    int fd2 = open("./doc3.txt", O_RDWR, S_IRWXU);
+    if (fd2 == -1){
+        perror("./doc3.txt");
+        printf("Error while opening the file doc3  fd2 %d", errno);
         exit(0);
     }
     else
@@ -36,7 +47,7 @@ int main(void)
         if (bytes_written == -1)
         {
             perror("./doc3.txt");
-            printf("Error while writing the file doc3 %d", errno);
+            printf("Error while writing the file doc3 fd2 %d", errno);
             exit(0);
         }
         else
