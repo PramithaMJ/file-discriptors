@@ -49,7 +49,7 @@ int main(void) {
          * The read function may also return 0 if the end of the file is reached.
          * The read function does not null-terminate the buffer, so the caller must ensure that the buffer is large enough to hold the data.
          */
-        int bytes_read = read(fd1, (void *)data_read, 18); // Read up to 18 bytes from the file into the buffer
+        int bytes_read = read(fd1, (void *) data_read, 18); // Read up to 18 bytes from the file into the buffer
         if (bytes_read == -1){
             perror("doc1.txt");
             printf("\nError occured when reading the file %d", errno);

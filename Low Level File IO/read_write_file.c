@@ -49,12 +49,12 @@ int main(void){
    /**
      * O_WRONLY - Write Only mode (not read-write as incorrectly noted)
      * O_CREAT - Create the file if it doesn't exist
-     * O_TRUNC - Truncate the file to 0 bytes if it exists (missing flag, duplicate O_CREAT instead)
+     * O_TRUNC - Truncate the file to 0 bytes if it exists
      * S_IRWXU - Read, write, and execute permissions for the file owner (User)
      * S_IRWXG - Read, write, and execute permissions for the group
      * S_IRWXO - Read, write, and execute permissions for others
      */
-    fd1 = open("doc1.txt", O_WRONLY | O_CREAT | O_CREAT, S_IRWXU | S_IRWXG | S_IRWXO); // Open file in write-only mode, create if it doesn't exist, truncate if it does
+    fd1 = open("doc1.txt", O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU | S_IRWXG | S_IRWXO); // Open file in write-only mode, create if it doesn't exist, truncate if it does
     if (fd1 == -1){
         perror("doc1.txt");
         printf("File could not be opened or created proerly. Error number is %d \n", errno); // Print error message if file opening fails
@@ -84,8 +84,8 @@ int main(void){
         int byte_written1 = write(fd1, (void *) buffer1, 8); // Write "age is" to file
         int byte_written2 = write(fd1, (void *) age, 2); // Write age to file
 
-        if (byte_written2 == -1){
-            perror("doc1.txt");
+        if (byte_written2 | byte_written1 == -1){
+            perror("doc1.txt"); // Print error message if writing fails
             printf("File could not be written properly. Error number is %d \n", errno); // Print error message if writing fails
             exit(0); // Exit the program with an error code
         }
